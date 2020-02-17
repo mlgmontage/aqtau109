@@ -245,10 +245,10 @@ jQuery(document).ready(function($) {
   };
   siteScroll();
 
-
+//   this function adds animation to stats
   var counter = function() {
 		
-		$('#about-section').waypoint( function( direction ) {
+		$('.stats_counter').waypoint( function( direction ) {
 
 			if( direction === 'down' && !$(this.element).hasClass('ftco-animated') ) {
 
