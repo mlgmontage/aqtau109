@@ -260,7 +260,7 @@ jQuery(document).ready(function($) {
 					  {
 					    number: num,
 					    numberStep: comma_separator_number_step
-					  }, 7000
+					  }, 3000
 					);
 				});
 				
@@ -269,8 +269,42 @@ jQuery(document).ready(function($) {
 		} , { offset: '95%' } );
 
 	}
-	counter();
 
 
+	// fetching data from https://ticketinfographics.herokuapp.com/ 
+
+	const settingsClosed = {
+		"url": "http://ticketinfographics.herokuapp.com/api/v1/tickets/closedtickets",
+		"method": "GET",
+		"crossOrigin": "true"
+	  };
+
+	const settingsOpen = {
+		"url": "http://ticketinfographics.herokuapp.com/api/v1/tickets/opentickets",
+		"method": "GET",
+		"crossOrigin": "true"
+	  };
+
+
+	$.ajax(settingsClosed).done(function (response) {
+
+		$.ajax(settingsOpen).done(function (response1) {
+
+			// Warning ids are case sensetive
+
+			$('#closedTicket').data('number', response);
+			console.log(response);
+			$('#openTicket').data('number', response1);
+			console.log(response1);
+
+			// calculating percentage
+			const percentage = response / (response1 + response) * 100;
+
+			$('#percentageOfTickets').data('number', percentage)
+
+			counter();
+		});
+	});
+	
 
 });
