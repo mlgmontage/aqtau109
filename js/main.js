@@ -285,24 +285,32 @@ jQuery(document).ready(function($) {
 		"crossOrigin": "true"
 	  };
 
+	const settingsProsrocheno = {
+		"url": "http://ticketinfographics.herokuapp.com/api/v1/tickets/prosrochenotickets",
+		"method": "GET",
+		"crossOrigin": "true"
+	  };
 
-	$.ajax(settingsClosed).done(function (response) {
+	$.ajax(settingsClosed).done(function (closed) {
 
-		$.ajax(settingsOpen).done(function (response1) {
+		$.ajax(settingsOpen).done(function (open) {
 
-			// Warning ids are case sensetive
+			$.ajax(settingsProsrocheno).done(function (prosrocheno) {
 
-			$('#closedTicket').data('number', response);
-			console.log(response);
-			$('#openTicket').data('number', response1);
-			console.log(response1);
+				// Warning ids are case sensetive
 
-			// calculating percentage
-			const percentage = response / (response1 + response) * 100;
+				$('#closedTicket').data('number', closed);
+				console.log(closed);
+				$('#sumTicket').data('number', open  + closed + prosrocheno);
+				console.log(open);
 
-			$('#percentageOfTickets').data('number', percentage)
+				// calculating percentage
+				const percentage = closed / (open + closed + prosrocheno) * 100;
 
-			counter();
+				$('#percentageOfTickets').data('number', percentage)
+
+				counter();
+			})
 		});
 	});
 	
