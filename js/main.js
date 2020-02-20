@@ -274,19 +274,19 @@ jQuery(document).ready(function($) {
 	// fetching data from https://ticketinfographics.herokuapp.com/ 
 
 	const settingsClosed = {
-		"url": "http://ticketinfographics.herokuapp.com/api/v1/tickets/closedtickets",
+		"url": "//ticketinfographics.herokuapp.com/api/v1/tickets/closedtickets",
 		"method": "GET",
 		"crossOrigin": "true"
 	  };
 
 	const settingsOpen = {
-		"url": "http://ticketinfographics.herokuapp.com/api/v1/tickets/opentickets",
+		"url": "//ticketinfographics.herokuapp.com/api/v1/tickets/opentickets",
 		"method": "GET",
 		"crossOrigin": "true"
 	  };
 
 	const settingsProsrocheno = {
-		"url": "http://ticketinfographics.herokuapp.com/api/v1/tickets/prosrochenotickets",
+		"url": "//ticketinfographics.herokuapp.com/api/v1/tickets/prosrochenotickets",
 		"method": "GET",
 		"crossOrigin": "true"
 	  };
