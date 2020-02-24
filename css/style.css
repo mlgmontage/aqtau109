@@ -305,10 +305,12 @@ h1, h2, h3, h4, h5,
     padding: 4em 0; }
 
 .site-footer {
-  padding: 4em 0; }
+  padding: 4em 0;
+  overflow: hidden; } 
   @media (min-width: 768px) {
     .site-footer {
-      padding: 8em 0; } }
+      padding: 4em 0; 
+      overflow: hidden;} }
   .site-footer .border-top {
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important; }
   .site-footer p {
@@ -1259,7 +1261,5 @@ h1, h2, h3, h4, h5,
   transform: translate(-50%, -50%); }
 
 html, body {
-  overflow: auto; }
-
-footer {
-  overflow: auto; }
+  overflow: auto;
+}
