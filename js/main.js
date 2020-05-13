@@ -287,40 +287,19 @@ jQuery(document).ready(function ($) {
     );
   };
 
-  // fetching data from https://ticketinfographics.herokuapp.com/
-  const api_url = `//ticketinfographics.herokuapp.com/api/v1`;
+  // fetch data from api to stats
+  const api_url = `http://localhost:8080/api/v1/count_tickets`;
+  fetch(api_url)
+    .then((response) => response.json())
+    .then((data) => {
+      $("#closedTicket").data("number", data.closed);
+      $("#sumTicket").data("number", data.all);
 
-  const settingsClosed = {
-    url: `${api_url}/tickets/closedtickets`,
-  };
+      // calculating percentage
+      const percentage = (data.closed / data.all) * 100;
 
-  const settingsOpen = {
-    url: `${api_url}/tickets/opentickets`,
-  };
+      $("#percentageOfTickets").data("number", percentage);
 
-  const settingsProsrocheno = {
-    url: `${api_url}/tickets/prosrochenotickets`,
-  };
-
-  $.ajax({ url: `${api_url}/tickets/closedtickets` }).done(function (closed) {
-    $.ajax(settingsOpen).done(function (open) {
-      $.ajax(settingsProsrocheno).done(function (prosrocheno) {
-        // Warning ids are case sensetive
-
-        $("#closedTicket").data("number", closed);
-        console.log(closed);
-        $("#sumTicket").data("number", open + closed + prosrocheno);
-        console.log(open);
-
-        // calculating percentage
-        const percentage = (closed / (open + closed + prosrocheno)) * 100;
-
-        $("#percentageOfTickets").data("number", percentage);
-
-        counter();
-      });
+      counter();
     });
-  });
-
-  // fetch
 });
