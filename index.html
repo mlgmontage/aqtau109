@@ -533,6 +533,46 @@
       </div>
     </div>
 
+
+    <!-- STATS -->
+    <div class="site-section bg-dark stats_counter" >
+      <div id="stats"></div> <!-- anchor to description -->
+      <div class="container">
+        <!--СООТНОШЕНИЕ ЛАЙКОВ И ДИЗЛАЙКОВ  -->
+        <div class="container">
+          <div class="row mb-5 justify-content-center">
+            <div class="col-md-7 text-center">
+              <div class="block-heading-1" data-aos-delay="">
+                <h2>ОЦЕНКА КАЧЕСТВА</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- data fetched from API -->
+        <div class="row">
+          <div class="col-12 text-center">
+            <div class="row">
+              <div style="padding: 20px; background-color: green" class="col-12 col-md-6 mb-4 col-lg-0 col-lg-6"  data-aos-delay="10">
+                <div class="block-counter-1">
+                  <span class="number"><span data-number="80" id="percentageOfTickets">0</span>%</span>
+                  <span class="caption"><span class="mr-2 icon-thumbs-o-up" style="font-size: 48px;"></span></span>
+                </div>
+              </div>
+
+              <div style="padding: 20px ; background-color: red;" class="col-12 col-md-6 mb-4 col-lg-0 col-lg-6"  data-aos-delay="10">
+                <div class="block-counter-1">
+                  <span class="number"><span data-number="20" id="percentageOfTickets">0</span>%</span>
+                  <span class="caption"><span class="mr-2 icon-thumbs-o-down" style="font-size: 48px;"></span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
     <!-- END OF STATS -->
 
 
@@ -649,7 +689,7 @@
 
 
   <!-- SCRIPT SECTION -->
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script src="js/jquery-3.3.1.min.js"></script>
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
