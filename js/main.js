@@ -300,6 +300,15 @@ jQuery(document).ready(function ($) {
 
       $("#percentageOfTickets").data("number", percentage);
 
+      // rating of likes && dislikes
+
+      const sumOfLikesAndDislikes = data.like + data.dislike;
+      const likes = (data.like / sumOfLikesAndDislikes) * 100;
+      const dislikes = (data.dislike / sumOfLikesAndDislikes) * 100;
+
+      $("#likes").data("number", likes);
+      $("#dislikes").data("number", dislikes);
+
       counter();
     });
 });
