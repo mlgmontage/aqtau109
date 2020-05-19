@@ -312,21 +312,3 @@ jQuery(document).ready(function ($) {
       counter();
     });
 });
-
-// chart
-// const ctx = document.getElementById("rating").getContext("2d");
-
-// const chart = new Chart(ctx, {
-//   type: "pie",
-//   data: {
-//     labels: ["Лайк", "Дизлайк"],
-//     datasets: [
-//       {
-//         label: "Рейтинг",
-//         data: [80, 20],
-//         backgroundColor: ["rgba(255, 0, 0, 1)", "rgba(0, 0, 255, 1)"],
-//         borderWidth: 0,
-//       },
-//     ],
-//   },
-// });
