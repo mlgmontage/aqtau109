@@ -335,43 +335,30 @@ jQuery(document).ready(function ($) {
     });
 
   function drawIndividual(data) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const container = document.createElement("div");
+    container.classList.add("row");
+    const ticketcanvas = document.createElement("canvas");
+    ticketcanvas.classList.add("col-6");
+    const likecanvas = document.createElement("canvas");
+    likecanvas.classList.add("col-6");
+
+    const ticket_ctx = ticketcanvas.getContext("2d");
+    const like_ctx = likecanvas.getContext("2d");
 
     fetch(`${host}/count_tickets/${data.id}`)
       .then((response) => response.json())
       .then((stat_data) => {
-        const chart = new Chart(ctx, {
-          type: "bar",
+        const chartTicket = new Chart(ticket_ctx, {
+          // type: "doughnut",
+          type: "polarArea",
 
           data: {
-            labels: [data.name.ru],
+            labels: ["Open", "Closed"],
             datasets: [
               {
                 label: "Всего",
-                backgroundColor: "#FE9A76",
-                data: [stat_data.all],
-              },
-              {
-                label: "Открытые",
-                backgroundColor: "#B03060",
-                data: [stat_data.open],
-              },
-              {
-                label: "Закрытые",
-                backgroundColor: "#008080",
-                data: [stat_data.closed],
-              },
-
-              {
-                label: "Лайки",
-                backgroundColor: "#0E6EB8",
-                data: [stat_data.like],
-              },
-              {
-                label: "Дизлайки",
-                backgroundColor: "#EE82EE",
-                data: [stat_data.dislike],
+                data: [stat_data.open, stat_data.closed],
+                backgroundColor: ["#36a2eb", "#cc65fe"],
               },
             ],
           },
@@ -380,17 +367,56 @@ jQuery(document).ready(function ($) {
             responsive: true,
             legend: {
               position: "right",
+              labels: {
+                fontSize: 16,
+              },
             },
             title: {
-              display: false,
+              display: true,
               text: data.name.ru,
+              fontSize: 24,
+              padding: 20,
+            },
+          },
+        });
+
+        const chartLike = new Chart(like_ctx, {
+          // type: "doughnut",
+          type: "polarArea",
+
+          data: {
+            labels: ["Like", "Dislike"],
+            datasets: [
+              {
+                label: "Всего",
+                data: [stat_data.like, stat_data.dislike],
+                backgroundColor: ["#ff6384", "#36a2eb"],
+              },
+            ],
+          },
+
+          options: {
+            responsive: true,
+            legend: {
+              position: "right",
+              labels: {
+                fontSize: 16,
+              },
+            },
+            title: {
+              display: true,
+              text: data.name.ru,
+              fontSize: 24,
+              padding: 20,
             },
           },
         });
       });
 
+    container.appendChild(ticketcanvas);
+    container.appendChild(likecanvas);
     // appending to DOM
-    graphArea.appendChild(canvas);
+    graphArea.appendChild(container);
   }
 
   // draw graph total stat
@@ -398,35 +424,28 @@ jQuery(document).ready(function ($) {
     const ctx = document.getElementById("graph").getContext("2d");
 
     const chart = new Chart(ctx, {
-      type: "bar",
+      // type: "doughnut",
+      type: "polarArea",
 
       data: {
-        labels: ["Все"],
+        labels: ["All", "Open", "Closed", "Like", "Dislike"],
         datasets: [
           {
             label: "Всего",
-            backgroundColor: "#FE9A76",
-            data: [stat_data.all],
-          },
-          {
-            label: "Открытые",
-            backgroundColor: "#B03060",
-            data: [stat_data.open],
-          },
-          {
-            label: "Закрытые",
-            backgroundColor: "#008080",
-            data: [stat_data.closed],
-          },
-          {
-            label: "Лайки",
-            backgroundColor: "#0E6EB8",
-            data: [stat_data.like],
-          },
-          {
-            label: "Дизлайки",
-            backgroundColor: "#EE82EE",
-            data: [stat_data.dislike],
+            data: [
+              stat_data.all,
+              stat_data.open,
+              stat_data.closed,
+              stat_data.like,
+              stat_data.dislike,
+            ],
+            backgroundColor: [
+              "#ff6384",
+              "#36a2eb",
+              "#cc65fe",
+              "#ffce56",
+              "#008080",
+            ],
           },
         ],
       },
@@ -435,10 +454,15 @@ jQuery(document).ready(function ($) {
         responsive: true,
         legend: {
           position: "right",
+          labels: {
+            fontSize: 16,
+          },
         },
         title: {
-          display: false,
+          display: true,
           text: "all",
+          fontSize: 24,
+          padding: 20,
         },
       },
     });
