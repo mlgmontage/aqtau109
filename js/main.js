@@ -287,40 +287,184 @@ jQuery(document).ready(function ($) {
     );
   };
 
-  // fetching data from https://ticketinfographics.herokuapp.com/
-  const api_url = `//ticketinfographics.herokuapp.com/api/v1`;
+  // fetch data from api to stats
+  const host = `http://localhost:8080/api/v1`;
 
-  const settingsClosed = {
-    url: `${api_url}/tickets/closedtickets`,
-  };
+  const api_url = `${host}/count_tickets`;
+  fetch(api_url)
+    .then((response) => response.json())
+    .then((data) => {
+      $("#closedTicket").data("number", data.closed);
+      $("#sumTicket").data("number", data.all);
 
-  const settingsOpen = {
-    url: `${api_url}/tickets/opentickets`,
-  };
+      // calculating percentage
+      const percentage = (data.closed / data.all) * 100;
 
-  const settingsProsrocheno = {
-    url: `${api_url}/tickets/prosrochenotickets`,
-  };
+      $("#percentageOfTickets").data("number", percentage);
 
-  $.ajax({ url: `${api_url}/tickets/closedtickets` }).done(function (closed) {
-    $.ajax(settingsOpen).done(function (open) {
-      $.ajax(settingsProsrocheno).done(function (prosrocheno) {
-        // Warning ids are case sensetive
+      // rating of likes && dislikes
 
-        $("#closedTicket").data("number", closed);
-        console.log(closed);
-        $("#sumTicket").data("number", open + closed + prosrocheno);
-        console.log(open);
+      const sumOfLikesAndDislikes = data.like + data.dislike;
+      const likes = (data.like / sumOfLikesAndDislikes) * 100;
+      const dislikes = (data.dislike / sumOfLikesAndDislikes) * 100;
 
-        // calculating percentage
-        const percentage = (closed / (open + closed + prosrocheno)) * 100;
+      $("#likes").data("number", likes);
+      $("#dislikes").data("number", dislikes);
 
-        $("#percentageOfTickets").data("number", percentage);
-
-        counter();
-      });
+      counter();
     });
-  });
 
-  // fetch
+  // graphing
+  const graphArea = document.getElementById("graphArea");
+
+  // All
+  fetch(`${host}/count_tickets`)
+    .then((response) => response.json())
+    .then((data) => {
+      drawTotalGraph(data);
+    });
+
+  // iterating through individual departments
+  fetch(`${host}/departments`)
+    .then((response) => response.json())
+    .then((jsonData) => {
+      const data = jsonData.data;
+      for (let i = 0; i < data.length; i++) {
+        drawIndividual(data[i]);
+      }
+    });
+
+  function drawIndividual(data) {
+    const container = document.createElement("div");
+    container.classList.add("row");
+    const ticketcanvas = document.createElement("canvas");
+    ticketcanvas.classList.add("col-6");
+    const likecanvas = document.createElement("canvas");
+    likecanvas.classList.add("col-6");
+
+    const ticket_ctx = ticketcanvas.getContext("2d");
+    const like_ctx = likecanvas.getContext("2d");
+
+    fetch(`${host}/count_tickets/${data.id}`)
+      .then((response) => response.json())
+      .then((stat_data) => {
+        const chartTicket = new Chart(ticket_ctx, {
+          // type: "doughnut",
+          type: "polarArea",
+
+          data: {
+            labels: ["Open", "Closed"],
+            datasets: [
+              {
+                label: "Всего",
+                data: [stat_data.open, stat_data.closed],
+                backgroundColor: ["#36a2eb", "#cc65fe"],
+              },
+            ],
+          },
+
+          options: {
+            responsive: true,
+            legend: {
+              position: "right",
+              labels: {
+                fontSize: 16,
+              },
+            },
+            title: {
+              display: true,
+              text: data.name.ru,
+              fontSize: 24,
+              padding: 20,
+            },
+          },
+        });
+
+        const chartLike = new Chart(like_ctx, {
+          // type: "doughnut",
+          type: "polarArea",
+
+          data: {
+            labels: ["Like", "Dislike"],
+            datasets: [
+              {
+                label: "Всего",
+                data: [stat_data.like, stat_data.dislike],
+                backgroundColor: ["#ff6384", "#36a2eb"],
+              },
+            ],
+          },
+
+          options: {
+            responsive: true,
+            legend: {
+              position: "right",
+              labels: {
+                fontSize: 16,
+              },
+            },
+            title: {
+              display: true,
+              text: data.name.ru,
+              fontSize: 24,
+              padding: 20,
+            },
+          },
+        });
+      });
+
+    container.appendChild(ticketcanvas);
+    container.appendChild(likecanvas);
+    // appending to DOM
+    graphArea.appendChild(container);
+  }
+
+  // draw graph total stat
+  function drawTotalGraph(stat_data) {
+    const ctx = document.getElementById("graph").getContext("2d");
+
+    const chart = new Chart(ctx, {
+      // type: "doughnut",
+      type: "polarArea",
+
+      data: {
+        labels: ["All", "Open", "Closed", "Like", "Dislike"],
+        datasets: [
+          {
+            label: "Всего",
+            data: [
+              stat_data.all,
+              stat_data.open,
+              stat_data.closed,
+              stat_data.like,
+              stat_data.dislike,
+            ],
+            backgroundColor: [
+              "#ff6384",
+              "#36a2eb",
+              "#cc65fe",
+              "#ffce56",
+              "#008080",
+            ],
+          },
+        ],
+      },
+
+      options: {
+        responsive: true,
+        legend: {
+          position: "right",
+          labels: {
+            fontSize: 16,
+          },
+        },
+        title: {
+          display: true,
+          text: "all",
+          fontSize: 24,
+          padding: 20,
+        },
+      },
+    });
+  }
 });
