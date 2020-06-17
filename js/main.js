@@ -334,85 +334,97 @@ jQuery(document).ready(function ($) {
       }
     });
 
-  function drawIndividual(data) {
+  async function drawIndividual(data) {
+    // graph container
     const container = document.createElement("div");
     container.classList.add("row");
+
+    // container header
+    const containerHeader = document.createElement("h1");
+    containerHeader.classList.add("text-center", "m-5", "col-12");
+
+    // tickets
     const ticketcanvas = document.createElement("canvas");
     ticketcanvas.classList.add("col-6");
+
+    // rating
     const likecanvas = document.createElement("canvas");
     likecanvas.classList.add("col-6");
 
+    // get context
     const ticket_ctx = ticketcanvas.getContext("2d");
     const like_ctx = likecanvas.getContext("2d");
 
-    fetch(`${host}/count_tickets/${data.id}`)
-      .then((response) => response.json())
-      .then((stat_data) => {
-        const chartTicket = new Chart(ticket_ctx, {
-          // type: "doughnut",
-          type: "polarArea",
+    const response = await fetch(`${host}/count_tickets/${data.id}`);
+    const stat_data = await response.json();
+    const chartTicket = new Chart(ticket_ctx, {
+      // type: "doughnut",
+      type: "polarArea",
 
-          data: {
-            labels: ["Open", "Closed"],
-            datasets: [
-              {
-                label: "Всего",
-                data: [stat_data.open, stat_data.closed],
-                backgroundColor: ["#36a2eb", "#cc65fe"],
-              },
-            ],
+      data: {
+        labels: [
+          `Открытые (${stat_data.open})`,
+          `Закрытые (${stat_data.closed})`,
+        ],
+        datasets: [
+          {
+            label: "Всего",
+            data: [stat_data.open, stat_data.closed],
+            backgroundColor: ["#36a2eb", "#cc65fe"],
           },
+        ],
+      },
 
-          options: {
-            responsive: true,
-            legend: {
-              position: "right",
-              labels: {
-                fontSize: 16,
-              },
-            },
-            title: {
-              display: true,
-              text: data.name.ru,
-              fontSize: 24,
-              padding: 20,
-            },
+      options: {
+        responsive: true,
+        legend: {
+          position: "right",
+          labels: {
+            fontSize: 16,
           },
-        });
+        },
+        title: {
+          display: true,
+          text: "Заявки",
+          fontSize: 24,
+          padding: 20,
+        },
+      },
+    });
 
-        const chartLike = new Chart(like_ctx, {
-          // type: "doughnut",
-          type: "polarArea",
+    const chartLike = new Chart(like_ctx, {
+      type: "polarArea",
 
-          data: {
-            labels: ["Like", "Dislike"],
-            datasets: [
-              {
-                label: "Всего",
-                data: [stat_data.like, stat_data.dislike],
-                backgroundColor: ["#ff6384", "#36a2eb"],
-              },
-            ],
+      data: {
+        labels: [`Лайк (${stat_data.like})`, `Дизлайк (${stat_data.dislike})`],
+        datasets: [
+          {
+            label: "Всего",
+            data: [stat_data.like, stat_data.dislike],
+            backgroundColor: ["#ff6384", "#36a2eb"],
           },
+        ],
+      },
 
-          options: {
-            responsive: true,
-            legend: {
-              position: "right",
-              labels: {
-                fontSize: 16,
-              },
-            },
-            title: {
-              display: true,
-              text: data.name.ru,
-              fontSize: 24,
-              padding: 20,
-            },
+      options: {
+        responsive: true,
+        legend: {
+          position: "right",
+          labels: {
+            fontSize: 16,
           },
-        });
-      });
+        },
+        title: {
+          display: true,
+          text: "Рейтинг",
+          fontSize: 24,
+          padding: 20,
+        },
+      },
+    });
 
+    containerHeader.innerHTML = data.name.ru;
+    container.append(containerHeader);
     container.appendChild(ticketcanvas);
     container.appendChild(likecanvas);
     // appending to DOM
