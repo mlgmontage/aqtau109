@@ -362,7 +362,10 @@ jQuery(document).ready(function ($) {
       type: "polarArea",
 
       data: {
-        labels: ["Open", "Closed"],
+        labels: [
+          `Открытые (${stat_data.open})`,
+          `Закрытые (${stat_data.closed})`,
+        ],
         datasets: [
           {
             label: "Всего",
@@ -393,7 +396,7 @@ jQuery(document).ready(function ($) {
       type: "polarArea",
 
       data: {
-        labels: ["Like", "Dislike"],
+        labels: [`Лайк (${stat_data.like})`, `Дизлайк (${stat_data.dislike})`],
         datasets: [
           {
             label: "Всего",
