@@ -315,7 +315,6 @@ jQuery(document).ready(function ($) {
     });
 
   // graphing
-  const graphArea = document.getElementById("graphArea");
 
   // All
   fetch(`${host}/count_tickets`)
@@ -328,12 +327,12 @@ jQuery(document).ready(function ($) {
   fetch(`${host}/departments`)
     .then((response) => response.json())
     .then((jsonData) => {
-      const data = jsonData.data;
-      for (let i = 0; i < data.length; i++) {
-        drawIndividual(data[i]);
-      }
+      jsonData.data.map((data) => {
+        drawIndividual(data);
+      });
     });
 
+  const graphArea = document.getElementById("graphArea");
   async function drawIndividual(data) {
     // graph container
     const container = document.createElement("div");
@@ -341,7 +340,7 @@ jQuery(document).ready(function ($) {
 
     // container header
     const containerHeader = document.createElement("h1");
-    containerHeader.classList.add("text-center", "m-5", "col-12");
+    containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
 
     // tickets
     const ticketcanvas = document.createElement("canvas");
@@ -381,12 +380,14 @@ jQuery(document).ready(function ($) {
           position: "right",
           labels: {
             fontSize: 16,
+            fontColor: "#000",
           },
         },
         title: {
           display: true,
           text: "Заявки",
           fontSize: 24,
+          fontColor: "#000",
           padding: 20,
         },
       },
@@ -401,7 +402,7 @@ jQuery(document).ready(function ($) {
           {
             label: "Всего",
             data: [stat_data.like, stat_data.dislike],
-            backgroundColor: ["#ff6384", "#36a2eb"],
+            backgroundColor: ["#016936", "#B03060"],
           },
         ],
       },
@@ -412,13 +413,16 @@ jQuery(document).ready(function ($) {
           position: "right",
           labels: {
             fontSize: 16,
+            fontColor: "#000",
           },
         },
         title: {
           display: true,
           text: "Рейтинг",
           fontSize: 24,
+          fontColor: "#000",
           padding: 20,
+          fontColor: "#000",
         },
       },
     });
@@ -435,12 +439,23 @@ jQuery(document).ready(function ($) {
   function drawTotalGraph(stat_data) {
     const ctx = document.getElementById("graph").getContext("2d");
 
+    const containerHeader = document.createElement("h1");
+    containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
+    containerHeader.innerText = "Заявки";
+    document.getElementById("graph").before(containerHeader);
+
     const chart = new Chart(ctx, {
       // type: "doughnut",
       type: "polarArea",
 
       data: {
-        labels: ["All", "Open", "Closed", "Like", "Dislike"],
+        labels: [
+          `Все (${stat_data.all})`,
+          `Открытые (${stat_data.open})`,
+          `Закрытые (${stat_data.closed})`,
+          `Лайк (${stat_data.like})`,
+          `Дизлайк (${stat_data.dislike})`,
+        ],
         datasets: [
           {
             label: "Всего",
@@ -468,15 +483,128 @@ jQuery(document).ready(function ($) {
           position: "right",
           labels: {
             fontSize: 16,
+            fontColor: "#000",
           },
-        },
-        title: {
-          display: true,
-          text: "all",
-          fontSize: 24,
-          padding: 20,
         },
       },
     });
   }
+
+  // graph category
+  const category_graph = document.getElementById("category_graph");
+
+  function drawCategoryGraph(data) {
+    const category_graph_canvas = document.createElement("canvas");
+    const ctx = category_graph_canvas.getContext("2d");
+
+    const labels = [];
+    const datas = [];
+    data.map((d) => {
+      labels.push(`${d.category_name} (${d.length})`);
+      datas.push(d.length);
+    });
+
+    new Chart(ctx, {
+      type: "polarArea",
+
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: datas,
+            backgroundColor: [
+              "#ff6384",
+              "#36a2eb",
+              "#cc65fe",
+              "#ffce56",
+              "#008080",
+            ],
+          },
+        ],
+      },
+
+      options: {
+        responsive: true,
+        legend: {
+          position: "right",
+          labels: {
+            fontSize: 16,
+            fontColor: "#000",
+          },
+        },
+      },
+    });
+    category_graph.appendChild(category_graph_canvas);
+  }
+
+  async function drawCategoryGraphIndividual(data) {
+    // Header
+
+    const containerHeader = document.createElement("h1");
+    containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
+    containerHeader.innerText = data.name.ru;
+
+    const response = await fetch(`${host}/category/${data.id}`);
+    const stat_data = await response.json();
+    console.log(stat_data);
+
+    const category_graph_canvas = document.createElement("canvas");
+    const ctx = category_graph_canvas.getContext("2d");
+
+    const labels = [];
+    const datas = [];
+    stat_data.map((d) => {
+      labels.push(`${d.category_name} (${d.length})`);
+      datas.push(d.length);
+    });
+
+    new Chart(ctx, {
+      type: "polarArea",
+
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: datas,
+            backgroundColor: [
+              "#ff6384",
+              "#36a2eb",
+              "#cc65fe",
+              "#ffce56",
+              "#008080",
+            ],
+          },
+        ],
+      },
+
+      options: {
+        responsive: true,
+        legend: {
+          position: "right",
+          labels: {
+            fontSize: 16,
+            fontColor: "#000",
+          },
+        },
+      },
+    });
+    category_graph.appendChild(containerHeader);
+    category_graph.appendChild(category_graph_canvas);
+  }
+
+  // All
+  fetch(`${host}/category`)
+    .then((response) => response.json())
+    .then((data) => {
+      drawCategoryGraph(data);
+    });
+
+  // // iterating through individual departments
+  fetch(`${host}/departments`)
+    .then((response) => response.json())
+    .then((jsonData) => {
+      jsonData.data.map((data) => {
+        drawCategoryGraphIndividual(data);
+      });
+    });
 });
