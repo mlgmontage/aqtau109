@@ -358,7 +358,7 @@ jQuery(document).ready(function ($) {
     const stat_data = await response.json();
     const chartTicket = new Chart(ticket_ctx, {
       // type: "doughnut",
-      type: "polarArea",
+      type: "pie",
 
       data: {
         labels: [
@@ -385,7 +385,7 @@ jQuery(document).ready(function ($) {
         },
         title: {
           display: true,
-          text: "Заявки",
+          text: "ОБРАЩЕНИЯ ГРАЖДАН",
           fontSize: 24,
           fontColor: "#000",
           padding: 20,
@@ -394,7 +394,7 @@ jQuery(document).ready(function ($) {
     });
 
     const chartLike = new Chart(like_ctx, {
-      type: "polarArea",
+      type: "pie",
 
       data: {
         labels: [`Лайк (${stat_data.like})`, `Дизлайк (${stat_data.dislike})`],
@@ -402,7 +402,7 @@ jQuery(document).ready(function ($) {
           {
             label: "Всего",
             data: [stat_data.like, stat_data.dislike],
-            backgroundColor: ["#016936", "#B03060"],
+            backgroundColor: ["#016936", "#FF0000"],
           },
         ],
       },
@@ -418,7 +418,7 @@ jQuery(document).ready(function ($) {
         },
         title: {
           display: true,
-          text: "Рейтинг",
+          text: "РЕЙТИНГ",
           fontSize: 24,
           fontColor: "#000",
           padding: 20,
@@ -441,7 +441,7 @@ jQuery(document).ready(function ($) {
 
     const containerHeader = document.createElement("h1");
     containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
-    containerHeader.innerText = "Заявки";
+    containerHeader.innerText = "ОБРАЩЕНИЯ ГРАЖДАН";
     document.getElementById("graph").before(containerHeader);
 
     const chart = new Chart(ctx, {
@@ -505,7 +505,7 @@ jQuery(document).ready(function ($) {
     });
 
     new Chart(ctx, {
-      type: "polarArea",
+      type: "horizontalBar",
 
       data: {
         labels: labels,
@@ -538,19 +538,20 @@ jQuery(document).ready(function ($) {
   }
 
   async function drawCategoryGraphIndividual(data) {
-    // Header
-
+    // Header text
     const containerHeader = document.createElement("h1");
     containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
-    containerHeader.innerText = data.name.ru;
+    containerHeader.innerText = data.name.ru; // department name
 
+    // fetch Category stats
     const response = await fetch(`${host}/category/${data.id}`);
     const stat_data = await response.json();
-    console.log(stat_data);
 
+    // canvas element
     const category_graph_canvas = document.createElement("canvas");
     const ctx = category_graph_canvas.getContext("2d");
 
+    // array of stats data
     const labels = [];
     const datas = [];
     stat_data.map((d) => {
@@ -559,7 +560,7 @@ jQuery(document).ready(function ($) {
     });
 
     new Chart(ctx, {
-      type: "polarArea",
+      type: "horizontalBar",
 
       data: {
         labels: labels,
@@ -582,7 +583,7 @@ jQuery(document).ready(function ($) {
         legend: {
           position: "right",
           labels: {
-            fontSize: 16,
+            fontSize: 24,
             fontColor: "#000",
           },
         },
