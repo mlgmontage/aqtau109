@@ -287,54 +287,13 @@ jQuery(document).ready(function ($) {
     );
   };
 
-  // fetch data from api to stats
-  const host = `http://localhost:8080/api/v1`;
-
-  const api_url = `${host}/count_tickets`;
-  fetch(api_url)
-    .then((response) => response.json())
-    .then((data) => {
-      $("#closedTicket").data("number", data.closed);
-      $("#sumTicket").data("number", data.all);
-
-      // calculating percentage
-      const percentage = (data.closed / data.all) * 100;
-
-      $("#percentageOfTickets").data("number", percentage);
-
-      // rating of likes && dislikes
-
-      const sumOfLikesAndDislikes = data.like + data.dislike;
-      const likes = (data.like / sumOfLikesAndDislikes) * 100;
-      const dislikes = (data.dislike / sumOfLikesAndDislikes) * 100;
-
-      $("#likes").data("number", likes);
-      $("#dislikes").data("number", dislikes);
-
-      counter();
-    });
-
   // graphing
 
-  // All
-  fetch(`${host}/count_tickets`)
-    .then((response) => response.json())
-    .then((data) => {
-      drawTotalGraph(data);
-    });
+  const host = `http://localhost:8080/api/v1`;
 
-  // iterating through individual departments
-  fetch(`${host}/departments`)
-    .then((response) => response.json())
-    .then((jsonData) => {
-      jsonData.data.map((data) => {
-        drawIndividual(data);
-      });
-    });
-
-  const graphArea = document.getElementById("graphArea");
-  async function drawIndividual(data) {
-    // graph container
+  async function drawGraph(slotId, departmentId) {
+    const slot = document.getElementById(slotId);
+    // container
     const container = document.createElement("div");
     container.classList.add("row");
 
@@ -350,15 +309,24 @@ jQuery(document).ready(function ($) {
     const likecanvas = document.createElement("canvas");
     likecanvas.classList.add("col-6");
 
-    // get context
-    const ticket_ctx = ticketcanvas.getContext("2d");
-    const like_ctx = likecanvas.getContext("2d");
+    // link to category stat page
+    const linkToCategory = document.createElement("h3");
+    linkToCategory.classList.add("text-center", "col-12");
+    linkToCategory.innerHTML = `<a href="more_stats.html#${
+      departmentId || ""
+    }">Подробнее</a>`;
 
-    const response = await fetch(`${host}/count_tickets/${data.id}`);
-    const stat_data = await response.json();
-    const chartTicket = new Chart(ticket_ctx, {
+    // fetching department data
+    const departments = await fetch(`${host}/departments`);
+    let data = await departments.json();
+    data = data.data[departmentId - 1] || undefined;
+
+    // fetching ticket stats
+    const tickets = await fetch(`${host}/count_tickets/${departmentId || ""}`);
+    const stat_data = await tickets.json();
+    const chartTicket = new Chart(ticketcanvas, {
       // type: "doughnut",
-      type: "polarArea",
+      type: "pie",
 
       data: {
         labels: [
@@ -385,7 +353,7 @@ jQuery(document).ready(function ($) {
         },
         title: {
           display: true,
-          text: "Заявки",
+          text: "ОБРАЩЕНИЯ ГРАЖДАН",
           fontSize: 24,
           fontColor: "#000",
           padding: 20,
@@ -393,16 +361,16 @@ jQuery(document).ready(function ($) {
       },
     });
 
-    const chartLike = new Chart(like_ctx, {
-      type: "polarArea",
+    const chartLike = new Chart(likecanvas, {
+      type: "pie",
 
       data: {
-        labels: [`Лайк (${stat_data.like})`, `Дизлайк (${stat_data.dislike})`],
+        labels: [`Лайк `, `Дизлайк `],
         datasets: [
           {
             label: "Всего",
             data: [stat_data.like, stat_data.dislike],
-            backgroundColor: ["#016936", "#B03060"],
+            backgroundColor: ["#016936", "#CCCCCC"],
           },
         ],
       },
@@ -418,7 +386,7 @@ jQuery(document).ready(function ($) {
         },
         title: {
           display: true,
-          text: "Рейтинг",
+          text: "РЕЙТИНГ",
           fontSize: 24,
           fontColor: "#000",
           padding: 20,
@@ -427,75 +395,30 @@ jQuery(document).ready(function ($) {
       },
     });
 
-    containerHeader.innerHTML = data.name.ru;
+    containerHeader.innerHTML = data ? data.name.ru : "Мангистауская область";
     container.append(containerHeader);
     container.appendChild(ticketcanvas);
     container.appendChild(likecanvas);
+    container.appendChild(linkToCategory);
     // appending to DOM
-    graphArea.appendChild(container);
+    slot.appendChild(container);
   }
 
-  // draw graph total stat
-  function drawTotalGraph(stat_data) {
-    const ctx = document.getElementById("graph").getContext("2d");
-
-    const containerHeader = document.createElement("h1");
-    containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
-    containerHeader.innerText = "Заявки";
-    document.getElementById("graph").before(containerHeader);
-
-    const chart = new Chart(ctx, {
-      // type: "doughnut",
-      type: "polarArea",
-
-      data: {
-        labels: [
-          `Все (${stat_data.all})`,
-          `Открытые (${stat_data.open})`,
-          `Закрытые (${stat_data.closed})`,
-          `Лайк (${stat_data.like})`,
-          `Дизлайк (${stat_data.dislike})`,
-        ],
-        datasets: [
-          {
-            label: "Всего",
-            data: [
-              stat_data.all,
-              stat_data.open,
-              stat_data.closed,
-              stat_data.like,
-              stat_data.dislike,
-            ],
-            backgroundColor: [
-              "#ff6384",
-              "#36a2eb",
-              "#cc65fe",
-              "#ffce56",
-              "#008080",
-            ],
-          },
-        ],
-      },
-
-      options: {
-        responsive: true,
-        legend: {
-          position: "right",
-          labels: {
-            fontSize: 16,
-            fontColor: "#000",
-          },
-        },
-      },
-    });
-  }
+  drawGraph("slot"); // All
+  drawGraph("slot1", 1); // All
+  drawGraph("slot2", 2); // All
+  drawGraph("slot3", 3); // All
 
   // graph category
-  const category_graph = document.getElementById("category_graph");
 
-  function drawCategoryGraph(data) {
-    const category_graph_canvas = document.createElement("canvas");
-    const ctx = category_graph_canvas.getContext("2d");
+  (async function () {
+    const hash = location.hash.split("#")[1];
+    const id = parseInt(hash);
+
+    const category_graph = document.getElementById("category_graph");
+    const response = await fetch(`${host}/category/${isNaN(id) ? "" : id}`);
+    const data = await response.json();
+    console.log(data);
 
     const labels = [];
     const datas = [];
@@ -504,13 +427,14 @@ jQuery(document).ready(function ($) {
       datas.push(d.length);
     });
 
-    new Chart(ctx, {
-      type: "polarArea",
+    new Chart(category_graph, {
+      type: "horizontalBar",
 
       data: {
         labels: labels,
         datasets: [
           {
+            label: "Категории",
             data: datas,
             backgroundColor: [
               "#ff6384",
@@ -525,6 +449,23 @@ jQuery(document).ready(function ($) {
 
       options: {
         responsive: true,
+        scales: {
+          xAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                fontSize: 16,
+                fontColor: "#000",
+              },
+            },
+          ],
+        },
         legend: {
           position: "right",
           labels: {
@@ -534,77 +475,124 @@ jQuery(document).ready(function ($) {
         },
       },
     });
-    category_graph.appendChild(category_graph_canvas);
-  }
+  })();
 
-  async function drawCategoryGraphIndividual(data) {
-    // Header
+  // graph category
+  // const category_graph = document.getElementById("category_graph");
 
-    const containerHeader = document.createElement("h1");
-    containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
-    containerHeader.innerText = data.name.ru;
+  // function drawCategoryGraph(data) {
+  //   const category_graph_canvas = document.createElement("canvas");
+  //   const ctx = category_graph_canvas.getContext("2d");
 
-    const response = await fetch(`${host}/category/${data.id}`);
-    const stat_data = await response.json();
-    console.log(stat_data);
+  //   const labels = [];
+  //   const datas = [];
+  //   data.map((d) => {
+  //     labels.push(`${d.category_name} (${d.length})`);
+  //     datas.push(d.length);
+  //   });
 
-    const category_graph_canvas = document.createElement("canvas");
-    const ctx = category_graph_canvas.getContext("2d");
+  //   new Chart(ctx, {
+  //     type: "horizontalBar",
 
-    const labels = [];
-    const datas = [];
-    stat_data.map((d) => {
-      labels.push(`${d.category_name} (${d.length})`);
-      datas.push(d.length);
-    });
+  //     data: {
+  //       labels: labels,
+  //       datasets: [
+  //         {
+  //           data: datas,
+  //           backgroundColor: [
+  //             "#ff6384",
+  //             "#36a2eb",
+  //             "#cc65fe",
+  //             "#ffce56",
+  //             "#008080",
+  //           ],
+  //         },
+  //       ],
+  //     },
 
-    new Chart(ctx, {
-      type: "polarArea",
+  //     options: {
+  //       responsive: true,
+  //       legend: {
+  //         position: "right",
+  //         labels: {
+  //           fontSize: 16,
+  //           fontColor: "#000",
+  //         },
+  //       },
+  //     },
+  //   });
+  //   category_graph.appendChild(category_graph_canvas);
+  // }
 
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            data: datas,
-            backgroundColor: [
-              "#ff6384",
-              "#36a2eb",
-              "#cc65fe",
-              "#ffce56",
-              "#008080",
-            ],
-          },
-        ],
-      },
+  // async function drawCategoryGraphIndividual(data) {
+  //   // Header text
+  //   const containerHeader = document.createElement("h1");
+  //   containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
+  //   containerHeader.innerText = data.name.ru; // department name
 
-      options: {
-        responsive: true,
-        legend: {
-          position: "right",
-          labels: {
-            fontSize: 16,
-            fontColor: "#000",
-          },
-        },
-      },
-    });
-    category_graph.appendChild(containerHeader);
-    category_graph.appendChild(category_graph_canvas);
-  }
+  //   // fetch Category stats
+  //   const response = await fetch(`${host}/category/${data.id}`);
+  //   const stat_data = await response.json();
+
+  //   // canvas element
+  //   const category_graph_canvas = document.createElement("canvas");
+  //   const ctx = category_graph_canvas.getContext("2d");
+
+  //   // array of stats data
+  //   const labels = [];
+  //   const datas = [];
+  //   stat_data.map((d) => {
+  //     labels.push(`${d.category_name} (${d.length})`);
+  //     datas.push(d.length);
+  //   });
+
+  //   new Chart(ctx, {
+  //     type: "horizontalBar",
+
+  //     data: {
+  //       labels: labels,
+  //       datasets: [
+  //         {
+  //           data: datas,
+  //           backgroundColor: [
+  //             "#ff6384",
+  //             "#36a2eb",
+  //             "#cc65fe",
+  //             "#ffce56",
+  //             "#008080",
+  //           ],
+  //         },
+  //       ],
+  //     },
+
+  //     options: {
+  //       responsive: true,
+  //       legend: {
+  //         position: "right",
+  //         labels: {
+  //           fontSize: 24,
+  //           fontColor: "#000",
+  //         },
+  //       },
+  //     },
+  //   });
+  //   category_graph.appendChild(containerHeader);
+  //   category_graph.appendChild(category_graph_canvas);
+  // }
 
   // All
-  fetch(`${host}/category`)
-    .then((response) => response.json())
-    .then((data) => {
-      drawCategoryGraph(data);
-    });
+  // fetch(`${host}/category`)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     drawCategoryGraph(data);
+  //   });
 
   // // iterating through individual departments
-  fetch(`${host}/departments`)
-    .then((response) => response.json())
-    .then((jsonData) => {
-      jsonData.data.map((data) => {
-        drawCategoryGraphIndividual(data);
-      });
-    });
+  // fetch(`${host}/departments`)
+  //   .then((response) => response.json())
+  //   .then((jsonData) => {
+  //     jsonData.data.map((data) => {
+  //       drawCategoryGraphIndividual(data);
+  //     });
+  //   });
 });
