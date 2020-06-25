@@ -311,7 +311,7 @@ jQuery(document).ready(function ($) {
 
     // link to category stat page
     const linkToCategory = document.createElement("h3");
-    linkToCategory.classList.add("text-center", "col-12");
+    linkToCategory.classList.add("text-center", "col-12", "mt-5");
     linkToCategory.innerHTML = `<a href="more_stats.html#${
       departmentId || ""
     }">Подробнее</a>`;
