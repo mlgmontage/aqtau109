@@ -298,7 +298,7 @@ jQuery(document).ready(function ($) {
     container.classList.add("row");
 
     // container header
-    const containerHeader = document.createElement("h1");
+    const containerHeader = document.createElement("h3");
     containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
 
     // tickets
@@ -337,7 +337,7 @@ jQuery(document).ready(function ($) {
           {
             label: "Всего",
             data: [stat_data.open, stat_data.closed],
-            backgroundColor: ["#36a2eb", "#cc65fe"],
+            backgroundColor: ["#157cea", "#777"],
           },
         ],
       },
@@ -370,7 +370,7 @@ jQuery(document).ready(function ($) {
           {
             label: "Всего",
             data: [stat_data.like, stat_data.dislike],
-            backgroundColor: ["#016936", "#CCCCCC"],
+            backgroundColor: ["#016936", "#fc0202"],
           },
         ],
       },
