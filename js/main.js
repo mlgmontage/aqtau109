@@ -319,7 +319,9 @@ jQuery(document).ready(function ($) {
     // fetching department data
     const departments = await fetch(`${host}/departments`);
     let data = await departments.json();
-    data = data.data[departmentId - 1] || undefined;
+    data = data.data.filter((department) => department.id === departmentId);
+    data = data.length <= 0 ? undefined : data[0];
+    console.log(data);
 
     // fetching ticket stats
     const tickets = await fetch(`${host}/count_tickets/${departmentId || ""}`);
@@ -408,6 +410,11 @@ jQuery(document).ready(function ($) {
   drawGraph("slot1", 1); // All
   drawGraph("slot2", 2); // All
   drawGraph("slot3", 3); // All
+  drawGraph("slot4", 4); // All
+  drawGraph("slot5", 5); // All
+  drawGraph("slot6", 6); // All
+  drawGraph("slot7", 7); // All
+  drawGraph("slot8", 8); // All
 
   // graph category
 
