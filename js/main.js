@@ -456,11 +456,17 @@ jQuery(document).ready(function ($) {
             label: "Категории",
             data: datas,
             backgroundColor: [
-              "#ff6384",
-              "#36a2eb",
-              "#cc65fe",
-              "#ffce56",
-              "#008080",
+              "#487549",
+              "#abba82",
+              "#a7b5b7",
+              "#037c87",
+              "#102020",
+              "#251f10",
+              "#5e6b34",
+              "#aabba8",
+              "#c1c729",
+              "#748501",
+              "#3c5b74",
             ],
           },
         ],
@@ -495,123 +501,4 @@ jQuery(document).ready(function ($) {
       },
     });
   })();
-
-  // graph category
-  // const category_graph = document.getElementById("category_graph");
-
-  // function drawCategoryGraph(data) {
-  //   const category_graph_canvas = document.createElement("canvas");
-  //   const ctx = category_graph_canvas.getContext("2d");
-
-  //   const labels = [];
-  //   const datas = [];
-  //   data.map((d) => {
-  //     labels.push(`${d.category_name} (${d.length})`);
-  //     datas.push(d.length);
-  //   });
-
-  //   new Chart(ctx, {
-  //     type: "horizontalBar",
-
-  //     data: {
-  //       labels: labels,
-  //       datasets: [
-  //         {
-  //           data: datas,
-  //           backgroundColor: [
-  //             "#ff6384",
-  //             "#36a2eb",
-  //             "#cc65fe",
-  //             "#ffce56",
-  //             "#008080",
-  //           ],
-  //         },
-  //       ],
-  //     },
-
-  //     options: {
-  //       responsive: true,
-  //       legend: {
-  //         position: "right",
-  //         labels: {
-  //           fontSize: 16,
-  //           fontColor: "#000",
-  //         },
-  //       },
-  //     },
-  //   });
-  //   category_graph.appendChild(category_graph_canvas);
-  // }
-
-  // async function drawCategoryGraphIndividual(data) {
-  //   // Header text
-  //   const containerHeader = document.createElement("h1");
-  //   containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
-  //   containerHeader.innerText = data.name.ru; // department name
-
-  //   // fetch Category stats
-  //   const response = await fetch(`${host}/category/${data.id}`);
-  //   const stat_data = await response.json();
-
-  //   // canvas element
-  //   const category_graph_canvas = document.createElement("canvas");
-  //   const ctx = category_graph_canvas.getContext("2d");
-
-  //   // array of stats data
-  //   const labels = [];
-  //   const datas = [];
-  //   stat_data.map((d) => {
-  //     labels.push(`${d.category_name} (${d.length})`);
-  //     datas.push(d.length);
-  //   });
-
-  //   new Chart(ctx, {
-  //     type: "horizontalBar",
-
-  //     data: {
-  //       labels: labels,
-  //       datasets: [
-  //         {
-  //           data: datas,
-  //           backgroundColor: [
-  //             "#ff6384",
-  //             "#36a2eb",
-  //             "#cc65fe",
-  //             "#ffce56",
-  //             "#008080",
-  //           ],
-  //         },
-  //       ],
-  //     },
-
-  //     options: {
-  //       responsive: true,
-  //       legend: {
-  //         position: "right",
-  //         labels: {
-  //           fontSize: 24,
-  //           fontColor: "#000",
-  //         },
-  //       },
-  //     },
-  //   });
-  //   category_graph.appendChild(containerHeader);
-  //   category_graph.appendChild(category_graph_canvas);
-  // }
-
-  // All
-  // fetch(`${host}/category`)
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     drawCategoryGraph(data);
-  //   });
-
-  // // iterating through individual departments
-  // fetch(`${host}/departments`)
-  //   .then((response) => response.json())
-  //   .then((jsonData) => {
-  //     jsonData.data.map((data) => {
-  //       drawCategoryGraphIndividual(data);
-  //     });
-  //   });
 });
