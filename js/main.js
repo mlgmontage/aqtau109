@@ -298,16 +298,16 @@ jQuery(document).ready(function ($) {
     container.classList.add("row");
 
     // container header
-    const containerHeader = document.createElement("h3");
-    containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
+    // const containerHeader = document.createElement("h3");
+    // containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
 
     // tickets
     const ticketcanvas = document.createElement("canvas");
-    ticketcanvas.classList.add("col-6");
+    ticketcanvas.classList.add("col-12", "col-md-6", "col-lg-6");
 
     // rating
     const likecanvas = document.createElement("canvas");
-    likecanvas.classList.add("col-6");
+    likecanvas.classList.add("col-12", "col-md-6", "col-lg-6");
 
     // link to category stat page
     const linkToCategory = document.createElement("h3");
@@ -410,10 +410,11 @@ jQuery(document).ready(function ($) {
       },
     });
 
-    containerHeader.innerHTML = !isMaster
-      ? data.name.ru
-      : "Мангистауская область";
-    container.append(containerHeader);
+    // containerHeader.innerHTML = !isMaster
+    //   ? data.name.ru
+    //   : "Мангистауская область";
+    // container.append(containerHeader);
+
     container.appendChild(ticketcanvas);
     container.appendChild(likecanvas);
     container.appendChild(linkToCategory);
