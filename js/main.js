@@ -298,8 +298,14 @@ jQuery(document).ready(function ($) {
     container.classList.add("row");
 
     // container header
-    // const containerHeader = document.createElement("h3");
-    // containerHeader.classList.add("text-center", "m-5", "col-12", "text-black");
+    const containerHeader = document.createElement("h3");
+    containerHeader.classList.add(
+      "text-center",
+      "mb-5",
+      "mt-5",
+      "col-12",
+      "text-black"
+    );
 
     // tickets
     const ticketcanvas = document.createElement("canvas");
@@ -410,10 +416,10 @@ jQuery(document).ready(function ($) {
       },
     });
 
-    // containerHeader.innerHTML = !isMaster
-    //   ? data.name.ru
-    //   : "Мангистауская область";
-    // container.append(containerHeader);
+    containerHeader.innerHTML = !isMaster
+      ? data.name.ru
+      : "Мангистауская область";
+    container.append(containerHeader);
 
     container.appendChild(ticketcanvas);
     container.appendChild(likecanvas);
