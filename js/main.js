@@ -363,15 +363,27 @@ jQuery(document).ready(function ($) {
       },
     });
 
+    const like = (
+      (stat_data.like / (stat_data.like + stat_data.dislike)) *
+      100
+    ).toFixed(1);
+    const dislike = (
+      (stat_data.dislike / (stat_data.like + stat_data.dislike)) *
+      100
+    ).toFixed(1);
+
     const chartLike = new Chart(likecanvas, {
       type: "pie",
 
       data: {
-        labels: [`Лайк `, `Дизлайк `],
+        labels: [
+          `Лайк ${isNaN(like) ? 0 : like}%`,
+          `Дизлайк ${isNaN(dislike) ? 0 : dislike}%`,
+        ],
         datasets: [
           {
             label: "Всего",
-            data: [stat_data.like, stat_data.dislike],
+            data: [like, dislike],
             backgroundColor: ["#016936", "#fc0202"],
           },
         ],
