@@ -339,8 +339,10 @@ jQuery(document).ready(function ($) {
 
       data: {
         labels: [
-          `${isMaster ? "Обращений поступило" : "Открытые"}(${stat_data.open})`,
-          `${isMaster ? "Проблем решено" : "Закрытые "}  (${stat_data.closed})`,
+          `${isMaster ? "Обращений поступило" : "Открытые"} (${
+            stat_data.open
+          })`,
+          `${isMaster ? "Проблем решено" : "Закрытые "} (${stat_data.closed})`,
         ],
         datasets: [
           {
