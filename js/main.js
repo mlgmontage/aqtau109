@@ -442,7 +442,7 @@ jQuery(document).ready(function ($) {
     const labels = [];
     const datas = [];
     data.map((d) => {
-      labels.push(`${d.category_name} (${d.length})`);
+      labels.push(`  ${d.category_name} (${d.length})`);
       datas.push(d.length);
     });
 
@@ -456,17 +456,18 @@ jQuery(document).ready(function ($) {
             label: "Категории",
             data: datas,
             backgroundColor: [
-              "#487549",
-              "#abba82",
-              "#a7b5b7",
-              "#037c87",
-              "#102020",
-              "#251f10",
-              "#5e6b34",
-              "#aabba8",
-              "#c1c729",
-              "#748501",
-              "#3c5b74",
+              "rgba(72, 117, 73, .5)",
+              "rgba(171, 186, 130, .5)",
+              "rgba(167, 181, 183, .5)",
+              "rgba(3, 124, 135, .5)",
+              "rgba(16, 32, 32, .5)",
+              "rgba(37, 31, 16, .5)",
+              "rgba(94, 107, 52, .5)",
+              "rgba(170, 187, 168, .5)",
+              "rgba(193, 199, 41, .5)",
+              "rgba(116, 133, 1, .5)",
+              "rgba(60, 91, 116, .5)",
+              "rgba(255, 0, 0, .5)",
             ],
           },
         ],
@@ -479,6 +480,7 @@ jQuery(document).ready(function ($) {
             {
               ticks: {
                 beginAtZero: true,
+                suggestedMin: 0,
               },
             },
           ],
@@ -487,11 +489,13 @@ jQuery(document).ready(function ($) {
               ticks: {
                 fontSize: 16,
                 fontColor: "#000",
+                mirror: true,
               },
             },
           ],
         },
         legend: {
+          display: false,
           position: "right",
           labels: {
             fontSize: 16,
