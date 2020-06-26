@@ -322,6 +322,7 @@ jQuery(document).ready(function ($) {
     data = data.data.filter((department) => department.id === departmentId);
     data = data.length <= 0 ? undefined : data[0];
     console.log(data);
+    const isMaster = !data ? true : false;
 
     // fetching ticket stats
     const tickets = await fetch(`${host}/count_tickets/${departmentId || ""}`);
@@ -332,8 +333,8 @@ jQuery(document).ready(function ($) {
 
       data: {
         labels: [
-          `Открытые (${stat_data.open})`,
-          `Закрытые (${stat_data.closed})`,
+          `${isMaster ? "Обращений поступило" : "Открытые"}(${stat_data.open})`,
+          `${isMaster ? "Проблем решено" : "Закрытые "}  (${stat_data.closed})`,
         ],
         datasets: [
           {
@@ -356,7 +357,7 @@ jQuery(document).ready(function ($) {
         title: {
           display: true,
           text: "ОБРАЩЕНИЯ ГРАЖДАН",
-          fontSize: 24,
+          fontSize: isMaster ? 24 : 18,
           fontColor: "#000",
           padding: 20,
         },
@@ -401,7 +402,7 @@ jQuery(document).ready(function ($) {
         title: {
           display: true,
           text: "РЕЙТИНГ",
-          fontSize: 24,
+          fontSize: isMaster ? 24 : 18,
           fontColor: "#000",
           padding: 20,
           fontColor: "#000",
@@ -409,7 +410,9 @@ jQuery(document).ready(function ($) {
       },
     });
 
-    containerHeader.innerHTML = data ? data.name.ru : "Мангистауская область";
+    containerHeader.innerHTML = !isMaster
+      ? data.name.ru
+      : "Мангистауская область";
     container.append(containerHeader);
     container.appendChild(ticketcanvas);
     container.appendChild(likecanvas);
